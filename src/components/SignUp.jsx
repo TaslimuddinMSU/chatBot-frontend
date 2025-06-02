@@ -1,6 +1,13 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
+    const navigate = useNavigate();
+    const handleAllBots = () => {
+        navigate('/all-bots')
+    }
+
+
     return (
         <div
             className="relative min-h-screen bg-cover bg-center bg-no-repeat"
@@ -45,6 +52,7 @@ const SignUpForm = () => {
                             type="submit"
                             className="text-lg w-full bg-blue-500 hover:bg-blue-600 
               text-white font-semibold py-2 rounded-md transition duration-300"
+                            onClick={handleAllBots}
                         >
                             Sign up
                         </button>
