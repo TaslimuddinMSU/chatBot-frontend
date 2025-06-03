@@ -1,17 +1,72 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 
 const SignUpForm = () => {
     const navigate = useNavigate();
-    const handleAllBots = () => {
-        navigate('/all-bots')
+    const [formData, setformData] = useState({
+        email: "",
+        password: "",
+        repeatPassword: ""
+    });
+
+    const [error, setError] = useState('')
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setformData((prev) => ({
+            ...prev, [name]: value
+        }));
     }
 
+    console.log("SignUp data", formData);
+
+    const validateEmail = (email) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
+
+    const validatePassword = (password) => {
+        // Minimum 8 characters, at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+        return regex.test(password);
+    };
+
+    const handleAllBots = (e) => {
+        e.preventDefault();
+
+        if (!validateEmail(formData.email)) {
+            setError("Please enter a valid email address.");
+            return;
+        }
+
+        if (!validatePassword(formData.password)) {
+            setError(
+                "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
+            );
+            return;
+        }
+
+        if (formData.password !== formData.repeatPassword) {
+            setError("Passwords do not match.");
+            return;
+        }
+
+        setError("");
+        navigate("/chat-box");
+    };
 
     return (
         <div
             className="relative min-h-screen bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('/register-bg.jpg')" }}
+            style={{
+                backgroundImage: "url('/register-bg.jpg')",
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                backgroundAttachment: 'fixed',
+            }}
         >
 
             {/* Overlay */}
@@ -31,22 +86,36 @@ const SignUpForm = () => {
                     <form className="space-y-4">
                         <input
                             type="email"
+                            name="email"
                             placeholder="Email address"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
                             className="text-lg w-full px-4 py-2 border border-gray-300 
               rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             type="password"
+                            name="password"
                             placeholder="Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
                             className="text-lg w-full px-4 py-2 border border-gray-300 
               rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             type="password"
+                            name="repeatPassword"
                             placeholder="Repeat password"
+                            value={formData.repeatPassword}
+                            onChange={handleChange}
+                            required
                             className="text-lg w-full px-4 py-2 border border-gray-300 
               rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
+
+                        {error && <div className="text-sm font-semibold text-red-500">{error}</div>}
 
                         <button
                             type="submit"
@@ -60,9 +129,9 @@ const SignUpForm = () => {
 
                     <p className="text-center font-bold text-gray-600 mt-4">
                         Already have an account?{" "}
-                        <a href="/login" className="text-blue-600 hover:underline text-lg font-bold">
+                        <Link href="/login" className="text-blue-600 hover:underline text-lg font-bold">
                             Login
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>

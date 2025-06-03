@@ -1,18 +1,63 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 const LoginForm = () => {
     const navigate = useNavigate();
 
-    const handleNavigation = () => {
-        navigate("/chat-box")
-    }
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
+    });
+
+    const [error, setError] = useState('');
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const validateEmail = (email) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
+
+    const validatePassword = (password) => {
+        // Minimum 8 characters, at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+        return regex.test(password);
+    };
+
+    const handleNavigation = (e) => {
+        e.preventDefault();
+
+        if (!validateEmail(formData.email)) {
+            setError("Please enter a valid email address.");
+            return;
+        }
+
+        if (!validatePassword(formData.password)) {
+            setError("Password must be at least 8 characters, with uppercase, lowercase, number, and special character.");
+            return;
+        }
+
+        setError("");
+        navigate("/chat-box");
+    };
+
     return (
         <div
             className="relative min-h-screen bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('/register-bg.jpg')" }}
+            style={{
+                backgroundImage: "url('/register-bg.jpg')",
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                backgroundAttachment: 'fixed',
+            }}
         >
-            {/* Overlay */}
             <div className="absolute inset-0 bg-black bg-opacity-60 z-0"></div>
 
             {/* Form Container */}
@@ -27,25 +72,36 @@ const LoginForm = () => {
                     </div>
                     <h1 className="text-center text-2xl font-bold text-gray-900 mb-6">Login to SmartChat</h1>
 
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={handleNavigation}>
                         <input
                             type="email"
+                            name="email"
                             placeholder="Email address"
+                            value={formData.email}
+                            required
+                            onChange={handleChange}
                             className="text-lg w-full px-4 py-2 border border-gray-300 rounded-md 
               focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             type="password"
+                            name="password"
+                            value={formData.password}
+                            required
+                            onChange={handleChange}
                             placeholder="Password"
                             className="text-lg w-full px-4 py-2 border border-gray-300 rounded-md 
-                            focus:outline-none focus:ring-2 focus:ring-blue-500"
+              focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
+
+                        {error && (
+                            <div className="text-sm font-semibold text-red-500">{error}</div>
+                        )}
 
                         <button
                             type="submit"
                             className="text-lg w-full bg-blue-500 hover:bg-blue-600 text-white 
-                            font-semibold py-2 rounded-md transition duration-300"
-                            onClick={handleNavigation}
+              font-semibold py-2 rounded-md transition duration-300"
                         >
                             Login
                         </button>
@@ -53,9 +109,9 @@ const LoginForm = () => {
 
                     <p className="text-center font-bold text-gray-600 mt-4">
                         Don’t have an account?{" "}
-                        <a href="/signup" className="text-blue-600 hover:underline text-lg font-bold">
+                        <Link to="/signup" className="text-blue-600 hover:underline text-lg font-bold">
                             Sign up
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>
