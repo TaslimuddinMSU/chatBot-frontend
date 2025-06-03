@@ -20,12 +20,14 @@ const LoginForm = () => {
     };
 
     const validateEmail = (email) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // exaple: user123@mail.com
+
+        const regex =  /^[a-z0-9]+@[a-z0-9.]+\.[a-zA-Z]{2,}$/;
         return regex.test(email);
     };
 
     const validatePassword = (password) => {
-        // Minimum 8 characters, at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character
+        // Minimum 8 characters, at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character eg: Strong@123
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
         return regex.test(password);
     };

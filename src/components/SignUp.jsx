@@ -23,7 +23,8 @@ const SignUpForm = () => {
     console.log("SignUp data", formData);
 
     const validateEmail = (email) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // exaple: user123@mail.com
+        const regex =  /^[a-z0-9]+@[a-z0-9.]+\.[a-zA-Z]{2,}$/; 
         return regex.test(email);
     };
 
